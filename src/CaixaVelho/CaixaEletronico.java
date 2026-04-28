@@ -1,3 +1,5 @@
+package CaixaVelho;
+
 import java.util.Scanner;
 
 public class CaixaEletronico {
@@ -34,9 +36,9 @@ public class CaixaEletronico {
     }
 
         /* Essa função vai pegar todos os dados do usuário, para criar uma
-        * nova conta e vai os enviar para a Classe Conta como valores*/
+        * nova conta e vai os enviar para a Classe CaixaVelho.Conta como valores*/
         public static Conta criarConta(Scanner scan, Conta conta){
-            System.out.println("Cadastro de Conta");
+            System.out.println("Cadastro de CaixaVelho.Conta");
             printLinhas();
 
         // Recebendo os valores do usuário
@@ -54,14 +56,14 @@ public class CaixaEletronico {
 
             scan.nextLine();
 
-        // Enviando os valores recebidos para dentro do objeto Conta
+        // Enviando os valores recebidos para dentro do objeto CaixaVelho.Conta
             conta.setNome(nome);
             conta.setCpf(cpf);
             conta.setSenha(senha);
             conta.setSaldo(saldo);
 
 
-            System.out.println("\nConta cadastrada com Sucesso");
+            System.out.println("\nCaixaVelho.Conta cadastrada com Sucesso");
             printLinhas();
 
         // Retorna a conta criada para dentro do Vetor "contas"
@@ -82,7 +84,7 @@ public class CaixaEletronico {
         }
 
         // Função para Login da conta
-        public static void acessarConta(Scanner scan,  Conta[] contas, int contador){
+        public static void acessarConta(Scanner scan, Conta[] contas, int contador){
             while (true){
                 System.out.println("\nAcessando sua conta");
                 printLinhas();
@@ -129,19 +131,19 @@ public class CaixaEletronico {
             }
         }
 
-    /* Criando o Menu após o login da Conta, permitindo Sacar, Depositar,
+    /* Criando o Menu após o login da CaixaVelho.Conta, permitindo Sacar, Depositar,
     * Ver quanto de saldo tem na conta */
         public static void menuConta(Scanner scan, Conta conta){
             boolean sair = false;
 
             while (!sair){
-                System.out.println("Menu da Conta:");
+                System.out.println("Menu da CaixaVelho.Conta:");
                 printLinhas();
 
-                System.out.println("1- Ver Saldo na Conta");
+                System.out.println("1- Ver Saldo na CaixaVelho.Conta");
                 System.out.println("2- Sacar Dinheiro");
                 System.out.println("3- Depositar Dinheiro");
-                System.out.println("4- Status da Conta");
+                System.out.println("4- Status da CaixaVelho.Conta");
                 System.out.println("5- Sair");
 
                 int opcao = scan.nextInt();
