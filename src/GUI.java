@@ -63,7 +63,7 @@ public class GUI extends JFrame {
                         String resultado = grafico.sacar(valorParaSaque);
 
                         // 4. Exibe o resultado para o usuário
-                        JOptionPane.showMessageDialog(null, resultado);
+
 
                     } catch (NumberFormatException ex) {
                         // Caso o usuário digite letras em vez de números

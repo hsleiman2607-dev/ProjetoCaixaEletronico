@@ -143,7 +143,7 @@ public class CaixaEletronico implements ICaixaEletronico{
             }
             this.totalSacadoNaSessao += valor;
             JOptionPane.showMessageDialog(null, mensagem.toString());
-            return mensagem.toString();
+
         }
         else {
             JOptionPane.showMessageDialog(null, "Erro: O caixa não possui notas disponíveis para compor este valor exato.");
