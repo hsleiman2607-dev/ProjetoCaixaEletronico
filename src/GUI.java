@@ -103,22 +103,34 @@ public class GUI extends JFrame {
 
                 try {
                     String txtCedula = JOptionPane.showInputDialog("Qual nota deseja repor? (Ex: 20, 50, 100)");
-                    String txtQtd = JOptionPane.showInputDialog("Quantidade de notas:");
 
-                    if (txtCedula != null && !txtCedula.isEmpty() && txtQtd != null&& !txtQtd.isEmpty()) {
+                    if (!txtCedula.isEmpty()) { //Invoca o metodo de verificação de Cedula
                         Integer cedula = Integer.parseInt(txtCedula);
-                        Integer qtd = Integer.parseInt(txtQtd);
 
-                        // Chama o método e mostra a resposta
-                        String msg = grafico.reposicaoCedulas(cedula, qtd);
-                        JOptionPane.showMessageDialog(null, msg);
+                        int valorCedula = Integer.parseInt(txtCedula);
 
-                        // 2. Chama o relatório logo em seguida para mostrar o novo estado
-                        String relatorioAtualizado = grafico.pegaRelatorioCedulas();
-                        JOptionPane.showMessageDialog(null, relatorioAtualizado, "Estoque Atualizado", JOptionPane.INFORMATION_MESSAGE);
+                        // 2. VALIDAÇÃO IMEDIATA
+                        if (!grafico.existeCedula(valorCedula)) {
+                            JOptionPane.showMessageDialog(null, "Reposição negada! Cedula Inválida", "Erro", JOptionPane.ERROR_MESSAGE);
+                            return; // O 'return' aqui mata a execução do botão. A parte de inserir a quantidade nem é executada
+                        }
+
+                        String txtQtd = JOptionPane.showInputDialog("Quantidade de notas:");
+
+                        if(!txtQtd.isEmpty()){
+                            Integer qtd = Integer.parseInt(txtQtd);
+
+                            // Chama o método e mostra a resposta
+                            String msg = grafico.reposicaoCedulas(cedula, qtd);
+                            JOptionPane.showMessageDialog(null, msg);
+
+                            // 2. Chama o relatório logo em seguida para mostrar o novo estado
+                            String relatorioAtualizado = grafico.pegaRelatorioCedulas();
+                            JOptionPane.showMessageDialog(null, relatorioAtualizado, "Estoque Atualizado", JOptionPane.INFORMATION_MESSAGE);
+                        }
                     }
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Digite apenas números inteiros!");
+                    JOptionPane.showMessageDialog(null, "Digite o valor da Cedula para repor");
                 }
             }
         });

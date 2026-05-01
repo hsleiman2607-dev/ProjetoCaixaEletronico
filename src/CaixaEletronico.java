@@ -6,11 +6,11 @@ import java.util.Scanner;
 public class CaixaEletronico implements ICaixaEletronico{
     private double totalSacadoNaSessao = 0;
     private int cotaMinima = 1000;
-    private int[][] estoqueCedulas;
+    private final Integer[][] estoqueCedulas;
 
     public CaixaEletronico() {
         //this.totalSacadoNaSessao = totalSacadoNaSessao;
-        this.estoqueCedulas = new int[][] {
+        this.estoqueCedulas = new Integer[][] {
                 {100, 100},
                 {50, 200},
                 {20, 300},
@@ -24,7 +24,7 @@ public class CaixaEletronico implements ICaixaEletronico{
 
     public String pegaRelatorioCedulas() {
         StringBuilder relatorio = new StringBuilder("Relatório de Cédulas:\n");
-        for (int[] par : estoqueCedulas) {
+        for (Integer[] par : estoqueCedulas) {
             relatorio.append(String.format("Nota R$ %d - Qtd: %d\n", par[0], par[1]));
         }
         relatorio.append("\n-------------------------------------------------------------------------\n");
@@ -51,14 +51,12 @@ public class CaixaEletronico implements ICaixaEletronico{
 
 
     public String reposicaoCedulas(Integer cedula, Integer quantidade) {
-        int i = 0;
-        String resposta = "Reposição concluída! Novo estoque de R$" + cedula + ": " + estoqueCedulas[i][1];
 
-        for(i = 0; i < estoqueCedulas.length; i++) {
-            // Verifica se a nota na linha i (posição 0) é a nota que queremos repor
-            if (estoqueCedulas[i][1] == cedula) {
+        for(int i = 0; i < estoqueCedulas.length; i++) {
+            // Verifica se a nota na linha i (coluna 0) é a nota que queremos repor
+            if (estoqueCedulas[i][0].equals(cedula)) {
 
-                // Adiciona a nova quantidade ao estoque existente (posição 1)
+                // Adiciona a nova quantidade ao estoque existente (coluna 1)
                 estoqueCedulas[i][1] += quantidade;
 
                 return "Reposição concluída! Novo estoque de R$" + cedula + ": " + estoqueCedulas[i][1];
@@ -66,8 +64,18 @@ public class CaixaEletronico implements ICaixaEletronico{
 
         }
 
-        //logica de fazer a reposicao de cedulas e criar uma mensagem //(resposta)ao usuario
-        return resposta;
+        //logica de fazer a reposicao de cedulas e criar uma mensagem(resposta) ao usuario
+        return "Reposição negada! Cedula Inválida";
+    }
+
+    //Método que verifica se a Nota existe mesmo, na hora da reposição
+    public boolean existeCedula(int cedula) {
+        for (Integer[] linha : estoqueCedulas) {
+            if (linha[0] == cedula) {
+                return true; // Tem lá!
+            }
+        }
+        return false; // Não existe
     }
 
 
