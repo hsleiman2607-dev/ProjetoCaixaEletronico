@@ -1,24 +1,25 @@
 import java.awt.EventQueue;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.SystemColor;
+import java.awt.Color;
+import java.awt.Font;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
-import java.awt.SystemColor;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.CompoundBorder;
-import java.awt.Font;
+
 
 public class GUI extends JFrame {
     CaixaEletronico grafico = new CaixaEletronico();
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
-// Launch the application.
+//Launch the application.
      
     public static void main(String[] args) {
 
@@ -172,7 +173,6 @@ public class GUI extends JFrame {
 
             }
         });
-        
         btnCotaMinima.setBounds(47, 220, 180, 30);
         contentPane.add(btnCotaMinima);
 
@@ -192,7 +192,6 @@ public class GUI extends JFrame {
                 System.exit(0);
             }
         });
-        
         btnSair.setBounds(47, 280, 180, 30);
         contentPane.add(btnSair);
         
