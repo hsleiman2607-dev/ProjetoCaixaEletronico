@@ -1,5 +1,4 @@
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,9 +18,8 @@ public class GUI extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
-    /**
-     * Launch the application.
-     */
+// Launch the application.
+     
     public static void main(String[] args) {
 
         EventQueue.invokeLater(new Runnable() {
@@ -37,9 +35,8 @@ public class GUI extends JFrame {
         });
     }
 
-    /**
-     * Create the frame.
-     */
+// Create the frame.
+     
     public GUI() {
     	setTitle("Caixa Eletronico");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,27 +53,29 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 String valor = JOptionPane.showInputDialog("Informe o valor de saque:");
-                // Verificação simples para evitar erro se o usuário cancelar o diálogo
+                
+// Verificação simples para evitar erro se o usuário cancelar o diálogo
                 if (valor != null && !valor.isEmpty()) {
                     try {
-                        // 2. Converte a String para um Integer
+// 2. Converte a String para um Integer
                         Integer valorParaSaque = Integer.parseInt(valor);
 
-                        // 3. Chama o seu método 'sacar' e guarda a mensagem de retorno
-                        // (Assumindo que o método 'sacar' está na mesma classe ou objeto acessível)
+// 3. Chama o seu método 'sacar' e guarda a mensagem de retorno
+// (Assumindo que o método 'sacar' está na mesma classe ou objeto acessível)
                         String resultado = grafico.sacar(valorParaSaque);
 
-                        // 4. Exibe o resultado para o usuário
-
-
+// 4. Exibe o resultado para o usuário
                     } catch (NumberFormatException ex) {
-                        // Caso o usuário digite letras em vez de números
+                    	
+// Caso o usuário digite letras em vez de números
                         JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido.");
                     }
                 }
 
             }
+            
         });
+        
         contentPane.add(btnSacar);
 
         JButton btnRelatorio = new JButton("Relatório de Cedulas");
@@ -89,6 +88,7 @@ public class GUI extends JFrame {
                 JOptionPane.showMessageDialog(null, relatorioCompleto, "Estoque de Notas", JOptionPane.INFORMATION_MESSAGE);
             }
         });
+        
         contentPane.add(btnRelatorio);
 
         JButton btnValorTotal = new JButton("Valor Total Disponivel");
@@ -100,6 +100,7 @@ public class GUI extends JFrame {
                 String ValorTotal = grafico.pegaValorTotalDisponivel();
             }
         });
+        
         contentPane.add(btnValorTotal);
 
         JButton btnReposicaoCedulas = new JButton("Reposição de Cedulas");
@@ -118,8 +119,11 @@ public class GUI extends JFrame {
 
                         // 2. VALIDAÇÃO IMEDIATA
                         if (!grafico.existeCedula(valorCedula)) {
-                            JOptionPane.showMessageDialog(null, "Reposição negada! Cedula Inválida", "Erro", JOptionPane.ERROR_MESSAGE);
-                            return; // O 'return' aqui mata a execução do botão. A parte de inserir a quantidade nem é executada
+                            JOptionPane.showMessageDialog
+                            (null, "Reposição negada! Cedula Inválida", "Erro", JOptionPane.ERROR_MESSAGE);
+                            
+// O 'return' aqui mata a execução do botão. A parte de inserir a quantidade nem é executada
+                            return; 
                         }
 
                         String txtQtd = JOptionPane.showInputDialog("Quantidade de notas:");
@@ -133,18 +137,18 @@ public class GUI extends JFrame {
 
                             // 2. Chama o relatório logo em seguida para mostrar o novo estado
                             String relatorioAtualizado = grafico.pegaRelatorioCedulas();
-                            JOptionPane.showMessageDialog(null, relatorioAtualizado, "Estoque Atualizado", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog
+                            (null, relatorioAtualizado, "Estoque Atualizado", JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
+                    
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(null, "Digite o valor da Cedula para repor");
                 }
             }
         });
+        
         contentPane.add(btnReposicaoCedulas);
-
-
-
 
         JButton btnCotaMinima = new JButton("Cota Minima");
         btnCotaMinima.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -154,10 +158,8 @@ public class GUI extends JFrame {
                 try {
                     String cota = JOptionPane.showInputDialog("Informe a Cota minima");
 
-
                     if (cota != null && !cota.isEmpty()) {
                         Integer minimo = Integer.parseInt(cota);
-
 
                         // Chama o método e mostra a resposta
                         String msg = grafico.armazenaCotaMinima(minimo);
@@ -177,14 +179,13 @@ public class GUI extends JFrame {
         btnSair.setFont(new Font("Tahoma", Font.PLAIN, 14));
         btnSair.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	
                 // 1. Busca o relatório final (use o seu objeto global do caixa)
                 String extratoFinal = grafico.extrato();
-                
-                
-                
 
                 // 2. Exibe o extrato em uma última janela
-                JOptionPane.showMessageDialog(null, extratoFinal, "Extrato Final de Encerramento", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog
+                (null, extratoFinal, "Extrato Final de Encerramento", JOptionPane.INFORMATION_MESSAGE);
 
                 // 3. Fecha o aplicativo completamente
                 System.exit(0);
