@@ -1,8 +1,9 @@
-import java.awt.EventQueue;
 import java.util. *;
+import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import java.util.Scanner;
+import java.awt.EventQueue;
+
 
 public class CaixaEletronico implements ICaixaEletronico{
 	
@@ -292,3 +293,4 @@ pela quantidade disponível (índice [i][1]) e soma ao total acumulado*/
     }
 
 }
+
