@@ -172,6 +172,7 @@ public class GUI extends JFrame {
 
             }
         });
+        
         btnCotaMinima.setBounds(47, 220, 180, 30);
         contentPane.add(btnCotaMinima);
 
@@ -191,6 +192,7 @@ public class GUI extends JFrame {
                 System.exit(0);
             }
         });
+        
         btnSair.setBounds(47, 280, 180, 30);
         contentPane.add(btnSair);
         
