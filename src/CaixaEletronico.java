@@ -147,8 +147,16 @@ pela quantidade disponível (índice [i][1]) e soma ao total acumulado*/
         int totalDeNotasSendoEntregues = 0;
         
         
-// --- falta comentarios ---
-// O Loop que percorre as notas
+// ... O Loop que percorre as notas ...
+        
+/* Esse trecho de código é o "coração" da lógica de saque do seu sistema de caixa eletrônico. 
+Ele decide quantas cédulas de cada valor serão entregues 
+e verifica se o volume físico de notas não ultrapassa o limite do equipamento.*/
+        
+/* O loop for percorre a matriz estoqueCedulas.
+A ideia aqui é ir do maior valor de nota para o menor 
+para garantir que o cliente receba a menor quantidade de papel possível.*/
+        
         for (int i = 0; i < estoqueCedulas.length; i++) {
             int valorNota = estoqueCedulas[i][0];
             int qtdNotas = getQtdNotas(i, valorRestante, valorNota);
@@ -160,12 +168,14 @@ pela quantidade disponível (índice [i][1]) e soma ao total acumulado*/
 
         }
         
+// Geralmente para evitar que as notas tranquem na saída. No código, esse limite é 30 notas.
         if (totalDeNotasSendoEntregues > 30) {
             JOptionPane.showMessageDialog(null, 
                 "Limite de notas excedido! O saque resultaria em " + totalDeNotasSendoEntregues + " notas.\n" +
                 "O limite máximo permitido é de 30 notas.", "Erro no Saque", JOptionPane.ERROR_MESSAGE);
                 
-            return "Erro"; // Esse 'return' para o método e impede o saque.
+// Esse 'return' para o método e impede o saque se  máquina não conseguir entregá-lo fisicamente.       
+            return "Erro"; 
         }
         
         
@@ -293,4 +303,3 @@ pela quantidade disponível (índice [i][1]) e soma ao total acumulado*/
     }
 
 }
-
