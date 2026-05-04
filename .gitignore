@@ -1,0 +1,29 @@
+# --- COMPILADOS E SAÍDAS ---
+*.class
+*.log
+*.ctxt
+*.jar
+*.war
+*.ear
+bin/
+target/
+build/
+
+# --- ECLIPSE (Arquivos de Configuração Local) ---
+.metadata/
+.settings/
+.project
+.classpath
+.recommenders/
+RemoteSystemsTempFiles/
+.externalToolBuilders/
+
+# --- SISTEMA OPERACIONAL ---
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# --- ARQUIVOS DE LOG E TEMPORÁRIOS ---
+*.tmp
+*.bak
+*.swp
