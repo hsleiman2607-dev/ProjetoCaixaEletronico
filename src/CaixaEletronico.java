@@ -1,6 +1,3 @@
-import java.util. *;
-import java.util.Scanner;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.awt.EventQueue;
 
@@ -118,8 +115,11 @@ pela quantidade disponível (índice [i][1]) e soma ao total acumulado*/
         return soma;
     }
 
-
-// Variável acumuladora ----?
+    
+// ... Variável acumuladora ...
+    
+/* armazena a soma sucessiva de valores. Ex: soma = soma + valorNovo;
+ela é atualizada dentro de um laço de repetição (loop) para "acumular" um resultado final.*/
     public String sacar(Integer valor) { 
         int valorDisponivel = calcularSomaTotal();
         
@@ -261,13 +261,13 @@ para garantir que o cliente receba a menor quantidade de papel possível.*/
 // Metodo para  gerar o extrato detalhado consolidando o histórico de saques e o saldo final
     public String extrato() {
     	
-        // 1. Começamos direto com o cabeçalho
+        // 1. Começa direto com o cabeçalho
         StringBuilder relatorio = new StringBuilder();  
         
-        // 2. Verificamos se há histórico
+        // 2. Verifica se há histórico
         if (historicoSaques.length() == 0) { 
         	
-//relatorio.append("--- EXTRATO  ---\n\n");
+// relatorio.append("--- EXTRATO  ---\n\n");
             relatorio.append("Nenhum saque realizado nesta sessão.\n");
         } else {
 // Adiciona o título do histórico e os dados salvos
@@ -275,14 +275,14 @@ para garantir que o cliente receba a menor quantidade de papel possível.*/
             relatorio.append(historicoSaques.toString());
         }
         
-        // 3. Adicionamos o rodapé com o Saldo Atualizado
+        // 3. Adiciona o rodapé com o Saldo Atualizado
         relatorio.append("\n----------------------------\n");
         relatorio.append(String.format("SALDO ATUALIZADO: R$ %.2f", this.saldoDisponivel));
         
         return relatorio.toString();
     }
     
-//logica de armazenar a cota minima para saque e criar um //mensagem(resposta)ao usuario
+// logica de armazenar a cota minima para saque e criar um //mensagem(resposta)ao usuario
     public String armazenaCotaMinima(Integer minimo) {
         this.cotaMinima = minimo;
         return "Cota mínima definida para R$" + minimo + ",00";
