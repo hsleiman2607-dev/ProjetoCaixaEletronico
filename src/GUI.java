@@ -14,13 +14,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.CompoundBorder;
 
 
+// Define que esta classe é uma janela
 public class GUI extends JFrame {
+	
     CaixaEletronico grafico = new CaixaEletronico();
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
-//Launch the application.
-     
+// É o ponto de entrada
     public static void main(String[] args) {
 
         EventQueue.invokeLater(new Runnable() {
@@ -36,8 +37,7 @@ public class GUI extends JFrame {
         });
     }
 
-// Create the frame.
-     
+// define as características visuais 
     public GUI() {
     	setTitle("Caixa Eletronico");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,15 +57,12 @@ public class GUI extends JFrame {
                 
 // Verificação simples para evitar erro se o usuário cancelar o diálogo
                 if (valor != null && !valor.isEmpty()) {
-                    try {
-// 2. Converte a String para um Integer
-                        Integer valorParaSaque = Integer.parseInt(valor);
+                    try {Integer valorParaSaque = Integer.parseInt(valor);
 
-// 3. Chama o seu método 'sacar' e guarda a mensagem de retorno
-// (Assumindo que o método 'sacar' está na mesma classe ou objeto acessível)
+// Chama o seu método 'sacar' e guarda a mensagem de retorno,
                         String resultado = grafico.sacar(valorParaSaque);
 
-// 4. Exibe o resultado para o usuário
+// Exibe o resultado para o usuário
                     } catch (NumberFormatException ex) {
                     	
 // Caso o usuário digite letras em vez de números
@@ -77,6 +74,7 @@ public class GUI extends JFrame {
             
         });
         
+// define a funcionalidade dos botões no painel
         contentPane.add(btnSacar);
 
         JButton btnRelatorio = new JButton("Relatório de Cedulas");
@@ -118,12 +116,12 @@ public class GUI extends JFrame {
 
                         int valorCedula = Integer.parseInt(txtCedula);
 
-                        // 2. VALIDAÇÃO IMEDIATA
+                        // ... Validação Imedianta ...
                         if (!grafico.existeCedula(valorCedula)) {
                             JOptionPane.showMessageDialog
                             (null, "Reposição negada! Cedula Inválida", "Erro", JOptionPane.ERROR_MESSAGE);
                             
-// O 'return' aqui mata a execução do botão. A parte de inserir a quantidade nem é executada
+// mata a execução do botão, com isso a parte de inserir a quantidade nem é executada
                             return; 
                         }
 
@@ -162,7 +160,7 @@ public class GUI extends JFrame {
                     if (cota != null && !cota.isEmpty()) {
                         Integer minimo = Integer.parseInt(cota);
 
-                        // Chama o método e mostra a resposta
+                        // ... Chama o método e mostra a resposta ...
                         String msg = grafico.armazenaCotaMinima(minimo);
                         JOptionPane.showMessageDialog(null, msg);
 
@@ -173,6 +171,7 @@ public class GUI extends JFrame {
 
             }
         });
+        
         btnCotaMinima.setBounds(47, 220, 180, 30);
         contentPane.add(btnCotaMinima);
 
@@ -181,17 +180,18 @@ public class GUI extends JFrame {
         btnSair.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	
-                // 1. Busca o relatório final (use o seu objeto global do caixa)
+                // ... Busca o relatório final (use o objeto global do caixa) ...
                 String extratoFinal = grafico.extrato();
 
-                // 2. Exibe o extrato em uma última janela
+                // ... Exibe o extrato em uma última janela ...
                 JOptionPane.showMessageDialog
                 (null, extratoFinal, "Extrato Final de Encerramento", JOptionPane.INFORMATION_MESSAGE);
 
-                // 3. Fecha o aplicativo completamente
+                // ... Fecha o aplicativo completamente ...
                 System.exit(0);
             }
         });
+        
         btnSair.setBounds(47, 280, 180, 30);
         contentPane.add(btnSair);
         
