@@ -10,8 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.CompoundBorder;
 
 
 // Define que esta classe é uma janela
@@ -111,7 +109,8 @@ public class GUI extends JFrame {
                 try {
                     String txtCedula = JOptionPane.showInputDialog("Qual nota deseja repor? (Ex: 20, 50, 100)");
 
-                    if (!txtCedula.isEmpty()) { //Invoca o metodo de verificação de Cedula
+                    if (!txtCedula.isEmpty()) { 
+                    	//Invoca o metodo de verificação de Cedula
                         Integer cedula = Integer.parseInt(txtCedula);
 
                         int valorCedula = Integer.parseInt(txtCedula);
@@ -134,7 +133,7 @@ public class GUI extends JFrame {
                             String msg = grafico.reposicaoCedulas(cedula, qtd);
                             JOptionPane.showMessageDialog(null, msg);
 
-                            // 2. Chama o relatório logo em seguida para mostrar o novo estado
+                            // Chama o relatório logo em seguida para mostrar o novo estado
                             String relatorioAtualizado = grafico.pegaRelatorioCedulas();
                             JOptionPane.showMessageDialog
                             (null, relatorioAtualizado, "Estoque Atualizado", JOptionPane.INFORMATION_MESSAGE);
