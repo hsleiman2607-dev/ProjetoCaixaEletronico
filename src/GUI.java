@@ -64,8 +64,9 @@ public class GUI extends JFrame {
                     } catch (NumberFormatException ex) {
                     	
 // Caso o usuário digite letras em vez de números
-                        JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido.");
+                        JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico de Nota válido.");
                     }
+                    
                 }
 
             }
@@ -107,11 +108,12 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    String txtCedula = JOptionPane.showInputDialog("Qual nota deseja repor? (Ex: 20, 50, 100)");
+                    String txtCedula = JOptionPane.showInputDialog("Qual nota deseja repor? (Ex: 20, 50, 100...)");
                     
                     if(txtCedula == null) return;
 
-                    if (!txtCedula.isEmpty()) { 
+                    if (!txtCedula.isEmpty()) {
+                    	
                     	//Invoca o metodo de verificação de Cedula
                         Integer cedula = Integer.parseInt(txtCedula);
 
@@ -120,7 +122,7 @@ public class GUI extends JFrame {
                         // ... Validação Imedianta ...
                         if (!grafico.existeCedula(valorCedula)) {
                             JOptionPane.showMessageDialog
-                            (null, "Reposição negada! Cedula Inválida", "Erro", JOptionPane.ERROR_MESSAGE);
+                            (null, "Reposição negada, Cedula Inválida", "Erro", JOptionPane.ERROR_MESSAGE);
                             
 // mata a execução do botão, com isso a parte de inserir a quantidade nem é executada
                             return; 
@@ -167,7 +169,7 @@ public class GUI extends JFrame {
 
                     }
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Digite apenas números inteiros!");
+                    JOptionPane.showMessageDialog(null, "Digite apenas números inteiros");
                 }
 
             }
