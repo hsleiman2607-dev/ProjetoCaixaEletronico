@@ -11,7 +11,7 @@ public class CaixaEletronico implements ICaixaEletronico {
     private double saldoDisponivel = 32750.00;
     
 // Objeto que armazena textualmente todos os saques para gerar o extrato final
-    private StringBuilder historicoSaques = new StringBuilder("--- EXTRATO DE SAQUES ---\n");
+    private StringBuilder historicoSaques = new StringBuilder("--- Extrato De Saques ---\n");
     
 // valor minimo que caixa deve manter 
     private int cotaMinima = 1000;
@@ -49,7 +49,7 @@ public class CaixaEletronico implements ICaixaEletronico {
         relatorio.append("\n-------------------------------------------------------------------------\n");
         
 // Adiciona o valor acumulado de saques realizados na sessão
-        relatorio.append(String.format("TOTAL SACADO NESTA SESSÃO: R$ %,.2f\n", totalSacadoNaSessao));
+        relatorio.append(String.format("Total Sacado Nesta SESSÃO: R$ %,.2f\n", totalSacadoNaSessao));
         relatorio.append("-------------------------------------------------------------------------\n");
         return relatorio.toString();
 
@@ -79,13 +79,13 @@ public class CaixaEletronico implements ICaixaEletronico {
 // Adiciona a nova quantidade ao estoque existente (coluna 1)
                 estoqueCedulas[i][1] += quantidade;
 
-                return "Reposição concluída! Novo estoque de R$" + cedula + ": " + estoqueCedulas[i][1];
+                return "Reposição concluída, Novo estoque: R$" + cedula + ": " + estoqueCedulas[i][1];
             }
 
         }
 
 // logica de fazer a reposicao de cedulas e criar uma mensagem(resposta) ao usuario
-        return "Reposição negada! Cedula Inválida";
+        return "Reposição negada, Cedula Inválida";
     }
 
 // Método que verifica se a Nota existe mesmo, na hora da reposição
@@ -171,7 +171,7 @@ para garantir que o cliente receba a menor quantidade de papel possível.*/
 // Geralmente para evitar que as notas tranquem na saída. No código, esse limite é 30 notas.
         if (totalDeNotasSendoEntregues > 30) {
             JOptionPane.showMessageDialog(null, 
-                "Limite de notas excedido! O saque resultaria em " + totalDeNotasSendoEntregues + " notas.\n" +
+                "Limite de notas excedido, O saque resultaria em " + totalDeNotasSendoEntregues + " notas.\n" +
                 "O limite máximo permitido é de 30 notas.", "Erro no Saque", JOptionPane.ERROR_MESSAGE);
                 
 // Esse 'return' para o método e impede o saque se  máquina não conseguir entregá-lo fisicamente.       
@@ -188,7 +188,7 @@ para garantir que o cliente receba a menor quantidade de papel possível.*/
         	this.totalSacadoNaSessao += valor; //somar o valor sacado do totalSacadoNaSessao
         	
 // registro de mensagem do saque efetuado 
-            StringBuilder mensagem = new StringBuilder("Saque realizado com sucesso!\n");
+            StringBuilder mensagem = new StringBuilder("Saque realizado com sucesso\n");
             
 // addiciona o registro deste saque ao historico de saques para extrato de encarramento 
             historicoSaques.append(String.format("Saque: R$ %d,00 | Saldo Atual: R$ %.2f\n", valor, this.saldoDisponivel));
@@ -303,3 +303,4 @@ para garantir que o cliente receba a menor quantidade de papel possível.*/
     }
 
 }
+
