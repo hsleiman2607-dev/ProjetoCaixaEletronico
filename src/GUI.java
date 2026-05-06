@@ -108,6 +108,8 @@ public class GUI extends JFrame {
 
                 try {
                     String txtCedula = JOptionPane.showInputDialog("Qual nota deseja repor? (Ex: 20, 50, 100)");
+                    
+                    if(txtCedula == null) return;
 
                     if (!txtCedula.isEmpty()) { 
                     	//Invoca o metodo de verificação de Cedula
