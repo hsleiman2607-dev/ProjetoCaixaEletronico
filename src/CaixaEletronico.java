@@ -261,10 +261,10 @@ para garantir que o cliente receba a menor quantidade de papel possível.*/
 // Metodo para  gerar o extrato detalhado consolidando o histórico de saques e o saldo final
     public String extrato() {
     	
-        // 1. Começa direto com o cabeçalho
+        // Começa direto com o cabeçalho
         StringBuilder relatorio = new StringBuilder();  
         
-        // 2. Verifica se há histórico
+        // Verifica se há histórico
         if (historicoSaques.length() == 0) { 
         	
 // relatorio.append("--- EXTRATO  ---\n\n");
@@ -275,17 +275,28 @@ para garantir que o cliente receba a menor quantidade de papel possível.*/
             relatorio.append(historicoSaques.toString());
         }
         
-        // 3. Adiciona o rodapé com o Saldo Atualizado
+        // Adiciona o rodapé com o Saldo Atualizado
         relatorio.append("\n----------------------------\n");
         relatorio.append(String.format("SALDO ATUALIZADO: R$ %.2f", this.saldoDisponivel));
         
         return relatorio.toString();
     }
     
-// logica de armazenar a cota minima para saque e criar um //mensagem(resposta)ao usuario
-    public String armazenaCotaMinima(Integer minimo) {
-        this.cotaMinima = minimo;
-        return "Cota mínima definida para R$" + minimo + ",00";
+ // Logica de armazenar a cota minima com validação de segurança
+    public String armazenaCotaMinima(Integer novoMinimo) {
+        // Calcula quanto dinheiro existe no caixa agora
+        int valorTotalNoCaixa = calcularSomaTotal();
+
+        // Verifica se a nova cota é maior que o saldo disponível
+        if (novoMinimo > valorTotalNoCaixa) {
+            // Retorna mensagem de erro e interrompe a atualização
+            return String.format("Erro: A cota mínima (R$ %d) não pode ser maior que o saldo em caixa (R$ %d).", 
+                                 novoMinimo, valorTotalNoCaixa);
+        }
+
+        // Se passou na validação, atualiza o valor
+        this.cotaMinima = novoMinimo;
+        return "Cota mínima definida com sucesso para R$ " + novoMinimo + ",00";
     }
    
 
