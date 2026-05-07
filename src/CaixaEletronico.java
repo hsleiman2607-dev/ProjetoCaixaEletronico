@@ -321,10 +321,6 @@ public class CaixaEletronico implements ICaixaEletronico {
             }
         }
 
-        mensagem.append(String.format(
-                "\nSaldo restante no caixa: R$ %,.2f",
-                (double) calcularSomaTotal()
-        ));
 
         return mensagem.toString();
     }
