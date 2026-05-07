@@ -124,7 +124,7 @@ ela é atualizada dentro de um laço de repetição (loop) para "acumular" um re
         int valorDisponivel = calcularSomaTotal();
         
 // validação que impede saques se o caixa estiver abaixo da reserva(Cota Minima)
-        if (valorDisponivel < this.cotaMinima) {
+        if ((valorDisponivel - valor) < this.cotaMinima) {
             return "Caixa Vazio: Chame o Operador";
         }
         int valorRestante = valor;
