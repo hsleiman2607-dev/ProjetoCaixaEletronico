@@ -1,215 +1,310 @@
-import java.awt.EventQueue;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.SystemColor;
+
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.SystemColor;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
+public class Gul extends JFrame {
 
-// Define que esta classe é uma janela
-public class GUI extends JFrame {
-	
-    CaixaEletronico grafico = new CaixaEletronico();
     private static final long serialVersionUID = 1L;
+
     private JPanel contentPane;
 
-// É o ponto de entrada
+    CaixaEletronico grafico = new CaixaEletronico();
+
+    // MAIN
     public static void main(String[] args) {
 
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    GUI frame = new GUI();
-                    frame.setVisible(true);
+        EventQueue.invokeLater(() -> {
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try { Gul frame = new Gul();
+
+                frame.setVisible(true);
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
             }
         });
     }
 
-// define as características visuais 
-    public GUI() {
-    	setTitle("Caixa Eletronico");
+    // CONSTRUTOR
+    public Gul() {
+
+        setTitle("Caixa Eletrônico");
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(500, 200, 282, 372);
+
+        setBounds(500, 200, 300, 380);
+
         contentPane = new JPanel();
+
         contentPane.setBorder(new LineBorder(new Color(0, 0, 0)));
-        setContentPane(contentPane);
+
         contentPane.setLayout(null);
 
+        setContentPane(contentPane);
+
+        // ==========================
+        // BOTÃO SACAR
+        // ==========================
+
         JButton btnSacar = new JButton("Efetuar Saque");
+
         btnSacar.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        btnSacar.setBounds(47, 33, 180, 30);
-        btnSacar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
 
-                String valor = JOptionPane.showInputDialog("Informe o valor de saque:");
-                
-// Verificação simples para evitar erro se o usuário cancelar o diálogo
-                if (valor != null && !valor.isEmpty()) {
-                    try {Integer valorParaSaque = Integer.parseInt(valor);
+        btnSacar.setBounds(47, 33, 190, 30);
 
-// Chama o seu método 'sacar' e guarda a mensagem de retorno,
-                        String resultado = grafico.sacar(valorParaSaque);
+        btnSacar.addActionListener(e -> {
 
-// Exibe o resultado para o usuário
-                    } catch (NumberFormatException ex) {
-                    	
-// Caso o usuário digite letras em vez de números
-                        JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico de Nota válido.");
-                    }
-                    
+            try {
+
+                String valor = JOptionPane.showInputDialog(
+                        "Informe o valor do saque:"
+                );
+
+                if (valor == null || valor.isEmpty()) {
+                    return;
                 }
 
+                Integer valorParaSaque = Integer.parseInt(valor);
+
+                String resultado = grafico.sacar(valorParaSaque);
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        resultado
+                );
+
+            } catch (NumberFormatException ex) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Digite apenas números inteiros.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE
+                );
             }
-            
         });
-        
-// define a funcionalidade dos botões no painel
+
         contentPane.add(btnSacar);
 
-        JButton btnRelatorio = new JButton("Relatório de Cedulas");
-        btnRelatorio.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        btnRelatorio.setBounds(47, 97, 180, 30);
-        btnRelatorio.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        // ==========================
+        // RELATÓRIO
+        // ==========================
 
-                String relatorioCompleto = grafico.pegaRelatorioCedulas();
-                JOptionPane.showMessageDialog(null, relatorioCompleto, "Estoque de Notas", JOptionPane.INFORMATION_MESSAGE);
-            }
+        JButton btnRelatorio = new JButton("Relatório de Cédulas");
+
+        btnRelatorio.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
+        btnRelatorio.setBounds(47, 97, 190, 30);
+
+        btnRelatorio.addActionListener(e -> {
+
+            String relatorio = grafico.pegaRelatorioCedulas();
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    relatorio,
+                    "Relatório",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         });
-        
+
         contentPane.add(btnRelatorio);
 
-        JButton btnValorTotal = new JButton("Valor Total Disponivel");
-        btnValorTotal.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        btnValorTotal.setBounds(47, 138, 180, 30);
-        btnValorTotal.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        // ==========================
+        // VALOR TOTAL
+        // ==========================
 
-                String ValorTotal = grafico.pegaValorTotalDisponivel();
-            }
+        JButton btnValorTotal = new JButton("Valor Total Disponível");
+
+        btnValorTotal.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
+        btnValorTotal.setBounds(47, 138, 190, 30);
+
+        btnValorTotal.addActionListener(e -> {
+
+            String total = grafico.pegaValorTotalDisponivel();
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    total,
+                    "Saldo do Caixa",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         });
-        
+
         contentPane.add(btnValorTotal);
 
-        JButton btnReposicaoCedulas = new JButton("Reposição de Cedulas");
-        btnReposicaoCedulas.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        btnReposicaoCedulas.setBounds(47, 179, 180, 30);
-        btnReposicaoCedulas.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        // ==========================
+        // REPOSIÇÃO
+        // ==========================
 
-                try {
-                    String txtCedula = JOptionPane.showInputDialog("Qual nota deseja repor? (Ex: 20, 50, 100...)");
-                    
-                    if(txtCedula == null) return;
+        JButton btnReposicao = new JButton("Reposição de Cédulas");
 
-                    if (!txtCedula.isEmpty()) {
-                    	
-                    	//Invoca o metodo de verificação de Cedula
-                        Integer cedula = Integer.parseInt(txtCedula);
+        btnReposicao.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
-                        int valorCedula = Integer.parseInt(txtCedula);
+        btnReposicao.setBounds(47, 179, 190, 30);
 
-                        // ... Validação Imedianta ...
-                        if (!grafico.existeCedula(valorCedula)) {
-                            JOptionPane.showMessageDialog
-                            (null, "Reposição negada, Cedula Inválida", "Erro", JOptionPane.ERROR_MESSAGE);
-                            
-// mata a execução do botão, com isso a parte de inserir a quantidade nem é executada
-                            return; 
-                        }
+        btnReposicao.addActionListener(e -> {
 
-                        String txtQtd = JOptionPane.showInputDialog("Quantidade de notas:");
+            try {
 
-                        if(!txtQtd.isEmpty()){
-                            Integer qtd = Integer.parseInt(txtQtd);
+                String txtCedula = JOptionPane.showInputDialog(
+                        "Qual nota deseja repor?"
+                );
 
-                            // Chama o método e mostra a resposta
-                            String msg = grafico.reposicaoCedulas(cedula, qtd);
-                            JOptionPane.showMessageDialog(null, msg);
-
-                            // Chama o relatório logo em seguida para mostrar o novo estado
-                            String relatorioAtualizado = grafico.pegaRelatorioCedulas();
-                            JOptionPane.showMessageDialog
-                            (null, relatorioAtualizado, "Estoque Atualizado", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }
-                    
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Digite o valor da Cedula para repor");
+                if (txtCedula == null || txtCedula.isEmpty()) {
+                    return;
                 }
+
+                Integer cedula = Integer.parseInt(txtCedula);
+
+                if (!grafico.existeCedula(cedula)) {
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Cédula inválida.",
+                            "Erro",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
+                    return;
+                }
+
+                String txtQtd = JOptionPane.showInputDialog(
+                        "Quantidade de notas:"
+                );
+
+                if (txtQtd == null || txtQtd.isEmpty()) {
+                    return;
+                }
+
+                Integer qtd = Integer.parseInt(txtQtd);
+
+                String msg = grafico.reposicaoCedulas(
+                        cedula,
+                        qtd
+                );
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        msg
+                );
+
+            } catch (NumberFormatException ex) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Digite apenas números inteiros.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE
+                );
             }
         });
-        
-        contentPane.add(btnReposicaoCedulas);
 
-        JButton btnCotaMinima = new JButton("Cota Minima");
+        contentPane.add(btnReposicao);
+
+        // ==========================
+        // COTA MÍNIMA
+        // ==========================
+
+        JButton btnCotaMinima = new JButton("Cota Mínima");
+
         btnCotaMinima.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        btnCotaMinima.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
 
-                try {
-                    String cota = JOptionPane.showInputDialog("Informe a Cota minima");
+        btnCotaMinima.setBounds(47, 220, 190, 30);
 
-                    if (cota != null && !cota.isEmpty()) {
-                        Integer minimo = Integer.parseInt(cota);
+        btnCotaMinima.addActionListener(e -> {
 
-                        // ... Chama o método e mostra a resposta ...
-                        String msg = grafico.armazenaCotaMinima(minimo);
-                        JOptionPane.showMessageDialog(null, msg);
+            try {
 
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Digite apenas números inteiros");
+                String cota = JOptionPane.showInputDialog(
+                        "Informe a nova cota mínima:"
+                );
+
+                if (cota == null || cota.isEmpty()) {
+                    return;
                 }
 
+                Integer minimo = Integer.parseInt(cota);
+
+                String msg = grafico.armazenaCotaMinima(minimo);
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        msg
+                );
+
+            } catch (NumberFormatException ex) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Digite apenas números inteiros.",
+                        "Erro",
+                        JOptionPane.ERROR_MESSAGE
+                );
             }
         });
-        
-        btnCotaMinima.setBounds(47, 220, 180, 30);
+
         contentPane.add(btnCotaMinima);
 
+        // ==========================
+        // SAIR
+        // ==========================
+
         JButton btnSair = new JButton("Sair");
+
         btnSair.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        btnSair.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	
-                // ... Busca o relatório final (use o objeto global do caixa) ...
-                String extratoFinal = grafico.extrato();
 
-                // ... Exibe o extrato em uma última janela ...
-                JOptionPane.showMessageDialog
-                (null, extratoFinal, "Extrato Final de Encerramento", JOptionPane.INFORMATION_MESSAGE);
+        btnSair.setBounds(47, 280, 190, 30);
 
-                // ... Fecha o aplicativo completamente ...
-                System.exit(0);
-            }
+        btnSair.addActionListener(e -> {
+
+            String extratoFinal = grafico.extrato();
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    extratoFinal,
+                    "Extrato Final",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            System.exit(0);
         });
-        
-        btnSair.setBounds(47, 280, 180, 30);
-        contentPane.add(btnSair);
-        
-        JLabel lblNewLabel = new JLabel("Modulo do Cliente:");
-        lblNewLabel.setForeground(SystemColor.desktop);
-        lblNewLabel.setBounds(46, 16, 109, 14);
-        contentPane.add(lblNewLabel);
-        
-        JLabel lblNewLabel_1 = new JLabel("Modulo do Admistrador:");
-        lblNewLabel_1.setBounds(47, 74, 170, 14);
-        contentPane.add(lblNewLabel_1);
-        
-        JLabel lblNewLabel_2 = new JLabel("Modulo de Ambos:");
-        lblNewLabel_2.setBounds(47, 261, 170, 14);
-        contentPane.add(lblNewLabel_2);
 
+        contentPane.add(btnSair);
+
+        // ==========================
+        // LABELS
+        // ==========================
+
+        JLabel lblCliente = new JLabel("Módulo do Cliente:");
+
+        lblCliente.setForeground(SystemColor.desktop);
+
+        lblCliente.setBounds(47, 15, 150, 14);
+
+        contentPane.add(lblCliente);
+
+        JLabel lblAdmin = new JLabel("Módulo do Administrador:");
+
+        lblAdmin.setBounds(47, 75, 170, 14);
+
+        contentPane.add(lblAdmin);
+
+        JLabel lblAmbos = new JLabel("Módulo Geral:");
+
+        lblAmbos.setBounds(47, 261, 170, 14);
+
+        contentPane.add(lblAmbos);
     }
 }
