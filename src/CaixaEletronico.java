@@ -220,7 +220,7 @@ public class CaixaEletronico implements ICaixaEletronico {
         }
 
         if (valor == 1 || valor == 3) {
-            return "Erro: impossível sacar R$ 1 ou R$ 3.";
+            return "Erro: Saque Inválido, Somente valor de Nota";
         }
 
         int valorDisponivel = calcularSomaTotal();
