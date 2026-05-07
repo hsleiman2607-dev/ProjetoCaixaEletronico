@@ -1,317 +1,420 @@
-import javax.swing.JOptionPane;
+
 import java.awt.EventQueue;
 
-
 public class CaixaEletronico implements ICaixaEletronico {
-	
-// Armazena o valor acumulado de saques efetuados 
-    private double totalSacadoNaSessao = 0;
-    
-// valor total de saldo disponivel para efetuar saque 
-    private double saldoDisponivel = 32750.00;
-    
-// Objeto que armazena textualmente todos os saques para gerar o extrato final
-    private StringBuilder historicoSaques = new StringBuilder("--- Extrato De Saques ---\n");
-    
-// valor minimo que caixa deve manter 
+
+    // Valor mínimo que o caixa deve manter
     private int cotaMinima = 1000;
+
+    // Histórico de saques
+    private final StringBuilder historicoSaques = new StringBuilder();
+
+    // Total sacado durante a sessão
+    private double totalSacadoNaSessao = 0;
+
+    // Matriz: [valor da nota][quantidade]
+    private final int[][] estoqueCedulas;
     
-// Matriz que representa o estoque: [valor da nota][quantidade disponível]
-    private final Integer[][] estoqueCedulas;
 
     public CaixaEletronico() {
-    	//// Inicialização do estoque com notas de 100, 50, 20, 10, 5 e 2 reais
-        this.estoqueCedulas = new Integer[][] {
+
+        // Inicialização do estoque
+        this.estoqueCedulas = new int[][] {
         	
                 {100, 100},
-                {50,  200},
-                {20,  300},
-                {10,  350},
-                {5,   450},
-                {2,   500}
+                {50, 200},
+                {20, 300},
+                {10, 350},
+                {5, 450},
+                {2, 500}
         };
-        
     }
 
-// metodo de gerar o relatorio de estoque atual de cedulas e total de sacado na sessao  
+
+
+    // RELATÓRIO DE CÉDULAS
+    
+
     public String pegaRelatorioCedulas() {
-    	
-// Inicializa o StringBuilder,construi a string, com o título do relatório
-        StringBuilder relatorio = new StringBuilder("Relatório de Cédulas:\n");
-        
-// Percorre a matriz de estoque para listar cada valor de nota e sua quantidade disponível
-        for (Integer[] par : estoqueCedulas) {
-        	
-        	// par[0] contém o valor da nota (ex: 100) e par[1] a quantidade
-            relatorio.append(String.format("Nota R$ %d - Qtd: %d\n", par[0], par[1]));
+
+        StringBuilder relatorio = new StringBuilder();
+
+        relatorio.append("--- RELATÓRIO DE CÉDULAS ---\n\n");
+
+        for (int[] par : estoqueCedulas) {
+            relatorio.append(String.format(
+                    "Nota R$ %d - Quantidade: %d\n",
+                    par[0],
+                    par[1]
+            ));
         }
-        
-        relatorio.append("\n-------------------------------------------------------------------------\n");
-        
-// Adiciona o valor acumulado de saques realizados na sessão
-        relatorio.append(String.format("Total Sacado Nesta SESSÃO: R$ %,.2f\n", totalSacadoNaSessao));
-        relatorio.append("-------------------------------------------------------------------------\n");
+
+        relatorio.append("\n------------------------------------------\n");
+
+        relatorio.append(String.format(
+                "TOTAL SACADO NA SESSÃO: R$ %,.2f\n",
+                totalSacadoNaSessao
+        ));
+
+        relatorio.append(String.format(
+                "SALDO TOTAL EM CAIXA: R$ %,.2f\n",
+                (double) calcularSomaTotal()
+        ));
+
+        relatorio.append("------------------------------------------\n");
+
         return relatorio.toString();
-
     }
-// metodo para mostrar o valor total disponivel no caixa eletronico
+
+
+   
+    // VALOR TOTAL DISPONÍVEL
+
+
     public String pegaValorTotalDisponivel() {
-        int i, soma=0;
-        String resposta = "Valor Total é " + soma;
-        
-// logica de pega o valor total disponivel no caixa eletronio
-        for(i = 0; i < estoqueCedulas.length; i++) {
-            int valorPorNota = estoqueCedulas[i][0] * estoqueCedulas[i][1];
-            soma += valorPorNota;
-        }
-        JOptionPane.showMessageDialog(null, String.format("Valor total no caixa: R$ %,.2f", (double)soma));
-        return resposta;
+
+        int soma = calcularSomaTotal();
+
+        return String.format(
+                "Valor total disponível no caixa: R$ %,.2f",
+                (double) soma
+        );
     }
 
 
-// metodo para repor cedulas do caixa 
+
+    // REPOSIÇÃO DE CÉDULAS
+   
+
     public String reposicaoCedulas(Integer cedula, Integer quantidade) {
 
-        for(int i = 0; i < estoqueCedulas.length; i++) {
-// Verifica se a nota na linha i (coluna 0) é a nota que queremos repor
-            if (estoqueCedulas[i][0].equals(cedula)) {
+        if (quantidade <= 0) {
+            return "Erro: quantidade inválida.";
+        }
 
-// Adiciona a nova quantidade ao estoque existente (coluna 1)
+        for (int i = 0; i < estoqueCedulas.length; i++) {
+
+            if (estoqueCedulas[i][0] == cedula) {
+
                 estoqueCedulas[i][1] += quantidade;
 
-                return "Reposição concluída, Novo estoque: R$" + cedula + ": " + estoqueCedulas[i][1];
+                return String.format(
+                        "Reposição concluída. Nota R$ %d agora possui %d unidades.",
+                        cedula,
+                        estoqueCedulas[i][1]
+                );
             }
-
         }
 
-// logica de fazer a reposicao de cedulas e criar uma mensagem(resposta) ao usuario
-        return "Reposição negada, Cedula Inválida";
+        return "Erro: cédula inválida.";
     }
 
-// Método que verifica se a Nota existe mesmo, na hora da reposição
+
+  
+    // VERIFICA EXISTÊNCIA DA CÉDULA
+    
+
     public boolean existeCedula(int cedula) {
-        for (Integer[] linha : estoqueCedulas) {
+
+        for (int[] linha : estoqueCedulas) {
+
             if (linha[0] == cedula) {
-                return true; // Tem lá!
+                return true;
             }
         }
-        return false; // Não existe
+
+        return false;
     }
 
-// calcula soma total disponivel no caixa somando todas cedulas
+
+  
+    // CALCULA SOMA TOTAL DO CAIXA
+  
+
     private int calcularSomaTotal() {
-    	
-// variavel acumuladora para armazenar o valor total em reais 
+
         int soma = 0;
-        
-// Percorre cada linha da matriz estoqueCedulas
-        for(int i = 0; i < estoqueCedulas.length; i++) {
-        	
-/* Multiplica o valor da nota (índice [i][0])
-pela quantidade disponível (índice [i][1]) e soma ao total acumulado*/
+
+        for (int i = 0; i < estoqueCedulas.length; i++) {
             soma += estoqueCedulas[i][0] * estoqueCedulas[i][1];
         }
-// retorna a soma
+
         return soma;
     }
 
+
+  
+    // SAQUE
     
-// ... Variável acumuladora ...
-    
-/* armazena a soma sucessiva de valores. Ex: soma = soma + valorNovo;
-ela é atualizada dentro de um laço de repetição (loop) para "acumular" um resultado final.*/
-    public String sacar(Integer valor) { 
-        int valorDisponivel = calcularSomaTotal();
-        
-// validação que impede saques se o caixa estiver abaixo da reserva(Cota Minima)
-        if ((valorDisponivel - valor) < this.cotaMinima) {
-            return "Caixa Vazio: Chame o Operador";
+
+    public String sacar(Integer valor) {
+
+        // Validações iniciais
+        String validacao = validarSaque(valor);
+
+        if (validacao != null) {
+            return validacao;
         }
+
         int valorRestante = valor;
-        JOptionPane.showMessageDialog(null, String.format("Processando saque de %d", valor));
 
-// primeira regra impedi valores negativos
-        if (valor <= 0) {
-            return "Erro: Valor de saque deve ser maior que zero.";
-        }
-        
-//segunda regra tratamento de valores impossíveis (como 1 ou 3 reais)
-        if (valor == 1 || valor == 3) {
-            return "Erro: Não existem notas para sacar valor de 1 ou tres reais";
-        }
-
-// Array para armazenar temporariamente a quantidade de cada nota que será entregue
         int[] notasParaEntregar = new int[estoqueCedulas.length];
-        
-// Contador para validar o limite físico de saída de notas para efetuar saque
-        int totalDeNotasSendoEntregues = 0;
-        
-        
-// ... O Loop que percorre as notas ...
-        
-/* Esse trecho de código é o "coração" da lógica de saque do seu sistema de caixa eletrônico. 
-Ele decide quantas cédulas de cada valor serão entregues 
-e verifica se o volume físico de notas não ultrapassa o limite do equipamento.*/
-        
-/* O loop for percorre a matriz estoqueCedulas.
-A ideia aqui é ir do maior valor de nota para o menor 
-para garantir que o cliente receba a menor quantidade de papel possível.*/
-        
+
+        int totalDeNotas = 0;
+
+        // Calcula notas
         for (int i = 0; i < estoqueCedulas.length; i++) {
+
             int valorNota = estoqueCedulas[i][0];
-            int qtdNotas = getQtdNotas(i, valorRestante, valorNota);
+
+            int qtdNotas = calcularQtdNotas(i, valorRestante, valorNota);
 
             notasParaEntregar[i] = qtdNotas;
-            valorRestante -= (qtdNotas * valorNota);
-               
-           totalDeNotasSendoEntregues += qtdNotas;
 
+            valorRestante -= qtdNotas * valorNota;
+
+            totalDeNotas += qtdNotas;
         }
-        
-// Geralmente para evitar que as notas tranquem na saída. No código, esse limite é 30 notas.
-        if (totalDeNotasSendoEntregues > 30) {
-            JOptionPane.showMessageDialog(null, 
-                "Limite de notas excedido, O saque resultaria em " + totalDeNotasSendoEntregues + " notas.\n" +
-                "O limite máximo permitido é de 30 notas.", "Erro no Saque", JOptionPane.ERROR_MESSAGE);
-                
-// Esse 'return' para o método e impede o saque se  máquina não conseguir entregá-lo fisicamente.       
-            return "Erro"; 
+
+        // Limite físico do caixa
+        if (totalDeNotas > 30) {
+            return "Erro: limite máximo de 30 notas excedido.";
         }
-        
-        
-// Validação final verifica se caixa consiguiu zerar  o valor do saque com as notas disponíveis
-        if (valorRestante == 0) {
-        	
-        	this.saldoDisponivel -= valor; // Subtrai o valor sacado do saldo total
-        	
-// Acumula o valor no total sacado durante a sessão atual para o relatório de cédulas
-        	this.totalSacadoNaSessao += valor; //somar o valor sacado do totalSacadoNaSessao
-        	
-// registro de mensagem do saque efetuado 
-            StringBuilder mensagem = new StringBuilder("Saque realizado com sucesso\n");
-            
-// addiciona o registro deste saque ao historico de saques para extrato de encarramento 
-            historicoSaques.append(String.format("Saque: R$ %d,00 | Saldo Atual: R$ %.2f\n", valor, this.saldoDisponivel));
-            
-// Percorre o array temporário de notas selecionadas para atualizar a matriz estoqueCedulas
-            for (int i = 0; i < estoqueCedulas.length; i++) {
-                
-                if (notasParaEntregar[i] > 0) {
-// mensagem detalhando quais notas o cliente está recebendo
-                    mensagem.append(String.format("%d nota(s) de R$%d\n", notasParaEntregar[i],  estoqueCedulas[i][0]));
-                    
-// Atualiza o estoque real (SET)
-                    estoqueCedulas[i][1] -= notasParaEntregar[i];
-                }
-            }
-            
-            JOptionPane.showMessageDialog(null, mensagem.toString());
 
+        // Não conseguiu montar o valor exato
+        if (valorRestante != 0) {
+            return "Erro: o caixa não possui notas suficientes para compor este valor.";
         }
-        else {
-        	
-// Caso o valorRestante não seja zero, as notas disponíveis não foram suficientes para compor o valor exato
-            JOptionPane.showMessageDialog(null, "Erro: O caixa não possui notas disponíveis para compor este valor exato.");
+
+        // Atualiza estoque
+        atualizarEstoque(notasParaEntregar);
+
+        // Atualiza histórico
+        totalSacadoNaSessao += valor;
+
+        historicoSaques.append(
+                String.format(
+                        "Saque: R$ %d,00 | Saldo restante: R$ %,.2f\n",
+                        valor,
+                        (double) calcularSomaTotal()
+                )
+        );
+
+        // Gera comprovante
+        return gerarMensagemSaque(notasParaEntregar, valor);
+    }
+
+
+ 
+    // VALIDA SAQUE
+  
+
+    private String validarSaque(Integer valor) {
+
+        if (valor == null) {
+            return "Erro: valor inválido.";
         }
-        System.out.println("-----------------------------------");
 
-        return "";
+        if (valor <= 0) {
+            return "Erro: o valor deve ser maior que zero.";
+        }
 
-    } // fim sacar
+        if (valor == 1 || valor == 3) {
+            return "Erro: impossível sacar R$ 1 ou R$ 3.";
+        }
 
-// metodo que calcula  quantidade ideal de notas  em determinado saque
-    private int getQtdNotas(int i, int valorRestante, int valorNota) {
-    	
-// Consulta a quantidade física disponível desta nota específica no estoque
-        int qtdDisponivel = estoqueCedulas[i][1];
+        int valorDisponivel = calcularSomaTotal();
 
-// Calcula quantas notas caberiam
+        if ((valorDisponivel - valor) < cotaMinima) {
+            return "Caixa indisponível: saldo maior que a cota mínima.";
+        }
+
+        if (valor > valorDisponivel) {
+            return "Erro: saldo insuficiente no caixa.";
+        }
+
+        return null;
+    }
+
+
+  
+    // CALCULA QUANTIDADE DE NOTAS
+  
+
+    private int calcularQtdNotas(int indice, int valorRestante, int valorNota) {
+
+        int qtdDisponivel = estoqueCedulas[indice][1];
+
         int qtdNotas = valorRestante / valorNota;
 
-// --- TRAVA DE SEGURANÇA PARA 1, 3, 11, 21... ---
-// Se tirar essas notas deixar um resto 1 ou 3, tiramos uma nota a menos
+
+        // Evita restos impossíveis
         if (valorNota > 5) {
-            int restoSeTirarTudo = valorRestante - (qtdNotas * valorNota);
-            if ((restoSeTirarTudo == 1 || restoSeTirarTudo == 3) && qtdNotas > 0) {
+
+            int resto = valorRestante - (qtdNotas * valorNota);
+
+            if ((resto == 1 || resto == 3) && qtdNotas > 0) {
                 qtdNotas--;
             }
         }
 
-// Lógica especial para a nota de 5: garantir que o que sobrar seja par (para a nota de 2)
+
+        // Regra da nota de 5
         if (valorNota == 5) {
-            if (valorRestante % 2 != 0 && valorRestante >= 5) {
-                qtdNotas = 1; // Pega uma nota de 5 para tornar o resto par
-            } else {
-                qtdNotas = (valorRestante / 10) * 2; // Pega notas de 5 em pares (R$ 10)
+
+            qtdNotas = valorRestante / 5;
+
+            // Se a sobra virar ímpar impossível para nota 2
+            while (qtdNotas > 0 &&
+                  ((valorRestante - (qtdNotas * 5)) % 2 != 0)) {
+
+                qtdNotas--;
             }
         }
 
-// Verifica se tem estoque suficiente
+
+        // Verifica estoque
         if (qtdNotas > qtdDisponivel) {
             qtdNotas = qtdDisponivel;
         }
+
         return qtdNotas;
     }
 
-// Método para o relatório buscar esse valor sacado 
+
+   
+    // ATUALIZA ESTOQUE
+   
+
+    private void atualizarEstoque(int[] notasParaEntregar) {
+
+        for (int i = 0; i < estoqueCedulas.length; i++) {
+
+            estoqueCedulas[i][1] -= notasParaEntregar[i];
+        }
+    }
+
+
+  
+    // GERA COMPROVANTE
+   
+
+    private String gerarMensagemSaque(int[] notasParaEntregar, int valor) {
+
+        StringBuilder mensagem = new StringBuilder();
+
+        mensagem.append("SAQUE REALIZADO COM SUCESSO\n\n");
+
+        mensagem.append(String.format("Valor sacado: R$ %d,00\n\n", valor));
+
+        for (int i = 0; i < estoqueCedulas.length; i++) {
+
+            if (notasParaEntregar[i] > 0) {
+
+                mensagem.append(
+                        String.format(
+                                "%d nota(s) para R$ %d\n",
+                                notasParaEntregar[i],
+                                estoqueCedulas[i][0]
+                        )
+                );
+            }
+        }
+
+        mensagem.append(String.format(
+                "\nSaldo restante no caixa: R$ %,.2f",
+                (double) calcularSomaTotal()
+        ));
+
+        return mensagem.toString();
+    }
+
+
+   
+    // TOTAL SACADO
+    
+
     public double getTotalSacado() {
         return totalSacadoNaSessao;
     }
-    
-// Metodo para  gerar o extrato detalhado consolidando o histórico de saques e o saldo final
+
+
+   
+    // EXTRATO
+ 
+
     public String extrato() {
-    	
-        // Começa direto com o cabeçalho
-        StringBuilder relatorio = new StringBuilder();  
-        
-        // Verifica se há histórico
-        if (historicoSaques.length() == 0) { 
-        	
-// relatorio.append("--- EXTRATO  ---\n\n");
+
+        StringBuilder relatorio = new StringBuilder();
+
+        relatorio.append("--- EXTRATO DE SAQUES ---\n\n");
+
+        if (historicoSaques.length() == 0) {
+
             relatorio.append("Nenhum saque realizado nesta sessão.\n");
+
         } else {
-// Adiciona o título do histórico e os dados salvos
-           
-            relatorio.append(historicoSaques.toString());
+
+            relatorio.append(historicoSaques);
         }
-        
-        // Adiciona o rodapé com o Saldo Atualizado
-        relatorio.append("\n----------------------------\n");
-        relatorio.append(String.format("SALDO ATUALIZADO: R$ %.2f", this.saldoDisponivel));
-        
+
+        relatorio.append("\n--------------------------------\n");
+
+        relatorio.append(
+                String.format(
+                        "SALDO ATUAL DO CAIXA: R$ %,.2f",
+                        (double) calcularSomaTotal()
+                )
+        );
+
         return relatorio.toString();
     }
-    
- // Logica de armazenar a cota minima com validação de segurança
-    public String armazenaCotaMinima(Integer novoMinimo) {
-        // Calcula quanto dinheiro existe no caixa agora
-        int valorTotalNoCaixa = calcularSomaTotal();
 
-        // Verifica se a nova cota é maior que o saldo disponível
-        if (novoMinimo > valorTotalNoCaixa) {
-            // Retorna mensagem de erro e interrompe a atualização
-            return String.format("Erro: A cota mínima (R$ %d) não pode ser maior que o saldo em caixa (R$ %d).", 
-                                 novoMinimo, valorTotalNoCaixa);
+
+    
+    // COTA MÍNIMA
+    
+
+    public String armazenaCotaMinima(Integer novoMinimo) {
+
+        if (novoMinimo == null || novoMinimo < 0) {
+            return "Erro: valor inválido para cota mínima.";
         }
 
-        // Se passou na validação, atualiza o valor
-        this.cotaMinima = novoMinimo;
-        return "Cota mínima definida com sucesso para R$ " + novoMinimo + ",00";
-    }
-   
+        int valorTotalNoCaixa = calcularSomaTotal();
 
-    public static void main(String arg[]){
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    GUI frame = new GUI();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if (novoMinimo > valorTotalNoCaixa) {
+
+            return String.format(
+                    "Erro: a cota mínima (R$ %d) não pode ser maior que o saldo atual do caixa (R$ %d).",
+                    novoMinimo,
+                    valorTotalNoCaixa
+            );
+        }
+
+        this.cotaMinima = novoMinimo;
+
+        return String.format(
+                "Cota mínima atualizada para R$ %d,00",
+                novoMinimo
+        );
+    }
+
+
+    public static void main(String[] args) {
+
+        EventQueue.invokeLater(() -> {
+
+            try {
+
+                Gul frame = new Gul();
+
+                frame.setVisible(true);
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
             }
         });
     }
-
 }
-
