@@ -25,13 +25,13 @@ public class Gul extends JFrame {
         EventQueue.invokeLater(() -> {
 
             try { Gul frame = new Gul();
+            
+            frame.setVisible(true);
 
-                frame.setVisible(true);
-
-            } catch (Exception e) {
-
-                e.printStackTrace();
+            } catch (Exception e) {e.printStackTrace();
+            
             }
+            
         });
     }
 
@@ -52,9 +52,8 @@ public class Gul extends JFrame {
 
         setContentPane(contentPane);
 
-        // ==========================
+
         // BOTÃO SACAR
-        // ==========================
 
         JButton btnSacar = new JButton("Efetuar Saque");
 
@@ -78,27 +77,20 @@ public class Gul extends JFrame {
 
                 String resultado = grafico.sacar(valorParaSaque);
 
-                JOptionPane.showMessageDialog(
-                        null,
-                        resultado
-                );
+                JOptionPane.showMessageDialog(null, resultado);
 
             } catch (NumberFormatException ex) {
 
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Digite apenas números inteiros.",
-                        "Erro",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                JOptionPane.showMessageDialog(null, "Digite apenas números inteiros.", "Erro",
+                        JOptionPane.ERROR_MESSAGE);
             }
+            
         });
 
         contentPane.add(btnSacar);
 
-        // ==========================
+
         // RELATÓRIO
-        // ==========================
 
         JButton btnRelatorio = new JButton("Relatório de Cédulas");
 
@@ -110,19 +102,14 @@ public class Gul extends JFrame {
 
             String relatorio = grafico.pegaRelatorioCedulas();
 
-            JOptionPane.showMessageDialog(
-                    null,
-                    relatorio,
-                    "Relatório",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            JOptionPane.showMessageDialog(null, relatorio, "Relatório",
+                    JOptionPane.INFORMATION_MESSAGE);
         });
 
         contentPane.add(btnRelatorio);
 
-        // ==========================
+
         // VALOR TOTAL
-        // ==========================
 
         JButton btnValorTotal = new JButton("Valor Total Disponível");
 
@@ -134,12 +121,8 @@ public class Gul extends JFrame {
 
             String total = grafico.pegaValorTotalDisponivel();
 
-            JOptionPane.showMessageDialog(
-                    null,
-                    total,
-                    "Saldo do Caixa",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            JOptionPane.showMessageDialog(null, total, "Saldo do Caixa",
+                    JOptionPane.INFORMATION_MESSAGE);
         });
 
         contentPane.add(btnValorTotal);
@@ -158,9 +141,7 @@ public class Gul extends JFrame {
 
             try {
 
-                String txtCedula = JOptionPane.showInputDialog(
-                        "Qual nota deseja repor?"
-                );
+                String txtCedula = JOptionPane.showInputDialog("Qual nota deseja repor?");
 
                 if (txtCedula == null || txtCedula.isEmpty()) {
                     return;
@@ -172,50 +153,36 @@ public class Gul extends JFrame {
 
                     JOptionPane.showMessageDialog(
                             null,
-                            "Cédula inválida.",
-                            "Erro",
-                            JOptionPane.ERROR_MESSAGE
-                    );
+                            "Cédula inválida," + " " + "Notas Disponiveis 2,5,10,20,50,100",
+                            "Erro", JOptionPane.ERROR_MESSAGE);
 
                     return;
                 }
 
-                String txtQtd = JOptionPane.showInputDialog(
-                        "Quantidade de notas:"
-                );
+                String Quantidade = JOptionPane.showInputDialog("Quantidade de notas:");
 
-                if (txtQtd == null || txtQtd.isEmpty()) {
+                if (Quantidade == null || Quantidade.isEmpty()) {
                     return;
                 }
 
-                Integer qtd = Integer.parseInt(txtQtd);
+                Integer qtd = Integer.parseInt(Quantidade);
 
-                String msg = grafico.reposicaoCedulas(
-                        cedula,
-                        qtd
-                );
+                String msg = grafico.reposicaoCedulas(cedula, qtd);
 
-                JOptionPane.showMessageDialog(
-                        null,
-                        msg
-                );
+                JOptionPane.showMessageDialog(null,msg);
 
             } catch (NumberFormatException ex) {
 
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Digite apenas números inteiros.",
-                        "Erro",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                JOptionPane.showMessageDialog(null,
+                        "Digite apenas números inteiros.", "Erro",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
         contentPane.add(btnReposicao);
 
-        // ==========================
+
         // COTA MÍNIMA
-        // ==========================
 
         JButton btnCotaMinima = new JButton("Cota Mínima");
 
@@ -225,11 +192,7 @@ public class Gul extends JFrame {
 
         btnCotaMinima.addActionListener(e -> {
 
-            try {
-
-                String cota = JOptionPane.showInputDialog(
-                        "Informe a nova cota mínima:"
-                );
+            try {String cota = JOptionPane.showInputDialog("Informe a nova cota mínima:");
 
                 if (cota == null || cota.isEmpty()) {
                     return;
@@ -239,27 +202,19 @@ public class Gul extends JFrame {
 
                 String msg = grafico.armazenaCotaMinima(minimo);
 
-                JOptionPane.showMessageDialog(
-                        null,
-                        msg
-                );
+                JOptionPane.showMessageDialog(null,msg);
 
             } catch (NumberFormatException ex) {
 
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Digite apenas números inteiros.",
-                        "Erro",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                JOptionPane.showMessageDialog(null,"Digite apenas números inteiros.","Erro",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
         contentPane.add(btnCotaMinima);
 
-        // ==========================
+
         // SAIR
-        // ==========================
 
         JButton btnSair = new JButton("Sair");
 
@@ -271,21 +226,16 @@ public class Gul extends JFrame {
 
             String extratoFinal = grafico.extrato();
 
-            JOptionPane.showMessageDialog(
-                    null,
-                    extratoFinal,
-                    "Extrato Final",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
+            JOptionPane.showMessageDialog(null, extratoFinal, "Extrato Final",
+                    JOptionPane.INFORMATION_MESSAGE);
 
             System.exit(0);
         });
 
         contentPane.add(btnSair);
 
-        // ==========================
+
         // LABELS
-        // ==========================
 
         JLabel lblCliente = new JLabel("Módulo do Cliente:");
 
@@ -308,3 +258,4 @@ public class Gul extends JFrame {
         contentPane.add(lblAmbos);
     }
 }
+
