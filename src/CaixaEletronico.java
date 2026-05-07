@@ -1,18 +1,20 @@
-
+// colocar a execução da interface gráfica na fila de eventos do sistema
 import java.awt.EventQueue;
 
+// implementa uma interface chamada
+// define as "regras" ou métodos obrigatórios que este caixa deve ter
 public class CaixaEletronico implements ICaixaEletronico {
 
-    // Valor mínimo que o caixa deve manter
+// O caixa não fará saques que o deixem com menos que isso
     private int cotaMinima = 1000;
 
-    // Histórico de saques
+// armazenar o registro em texto de todos os saques realizados
     private final StringBuilder historicoSaques = new StringBuilder();
 
-    // Total sacado durante a sessão
+// Variável que acumula o valor total de dinheiro
     private double totalSacadoNaSessao = 0;
 
-    // Matriz: [valor da nota][quantidade]
+// Matriz para guardar o estoque: [valor da nota][quantidade]
     private final int[][] estoqueCedulas;
     
 
@@ -21,6 +23,7 @@ public class CaixaEletronico implements ICaixaEletronico {
         // Inicialização do estoque
         this.estoqueCedulas = new int[][] {
         	
+        	// os valores padrão Inicial
                 {100, 100},
                 {50,  200},
                 {20,  300},
@@ -31,19 +34,16 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-
-    // RELATÓRIO DE CÉDULAS
+// Inicia a construção do texto do relatório.
     
-
     public String pegaRelatorioCedulas() {
-
         StringBuilder relatorio = new StringBuilder();
+        relatorio.append("---- Relatório de Cédulas ----\n\n");
 
-        relatorio.append("--- RELATÓRIO DE CÉDULAS ---\n\n");
-
+        
+// Faz um laço (loop) passando por cada linha (par) do estoque e formata uma string dizendo "Nota R$ X - Quantidade: Y"
         for (int[] par : estoqueCedulas) {
-            relatorio.append(String.format(
-                    "Nota R$ %d - Quantidade: %d\n",
+            relatorio.append(String.format("Nota R$ %d - Quantidade: %d\n",
                     par[0],
                     par[1]
             ));
@@ -51,13 +51,11 @@ public class CaixaEletronico implements ICaixaEletronico {
 
         relatorio.append("\n------------------------------------------\n");
 
-        relatorio.append(String.format(
-                "TOTAL SACADO NA SESSÃO: R$ %,.2f\n",
+        relatorio.append(String.format("Total Sacado na Sessão: R$ %,.2f\n",
                 totalSacadoNaSessao
         ));
 
-        relatorio.append(String.format(
-                "SALDO TOTAL EM CAIXA: R$ %,.2f\n",
+        relatorio.append(String.format("Saldo Total em Caixa: R$ %,.2f\n",
                 (double) calcularSomaTotal()
         ));
 
@@ -65,27 +63,21 @@ public class CaixaEletronico implements ICaixaEletronico {
 
         return relatorio.toString();
     }
-
-
    
     // VALOR TOTAL DISPONÍVEL
-
 
     public String pegaValorTotalDisponivel() {
 
         int soma = calcularSomaTotal();
 
-        return String.format(
-                "Valor total disponível no caixa: R$ %,.2f",
+        return String.format("Valor total disponível no caixa: R$ %,.2f",
                 (double) soma
         );
     }
 
 
-
     // REPOSIÇÃO DE CÉDULAS
    
-
     public String reposicaoCedulas(Integer cedula, Integer quantidade) {
 
         if (quantidade <= 0) {
@@ -95,13 +87,10 @@ public class CaixaEletronico implements ICaixaEletronico {
         for (int i = 0; i < estoqueCedulas.length; i++) {
 
             if (estoqueCedulas[i][0] == cedula) {
-
                 estoqueCedulas[i][1] += quantidade;
 
-                return String.format(
-                        "Reposição concluída. Nota R$ %d agora possui %d unidades.",
-                        cedula,
-                        estoqueCedulas[i][1]
+                return String.format("Reposição concluída. Nota R$ %d agora possui %d unidades.",
+                        cedula,estoqueCedulas[i][1]
                 );
             }
         }
@@ -110,14 +99,12 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-  
-    // VERIFICA EXISTÊNCIA DA CÉDULA
-    
+    // VERIFICA EXISTÊNCIA DA CÉDULA 
 
     public boolean existeCedula(int cedula) {
 
         for (int[] linha : estoqueCedulas) {
-
+        	
             if (linha[0] == cedula) {
                 return true;
             }
@@ -127,9 +114,7 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-  
     // CALCULA SOMA TOTAL DO CAIXA
-  
 
     private int calcularSomaTotal() {
 
@@ -143,9 +128,7 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-  
     // SAQUE
-    
 
     public String sacar(Integer valor) {
 
@@ -192,11 +175,8 @@ public class CaixaEletronico implements ICaixaEletronico {
         // Atualiza histórico
         totalSacadoNaSessao += valor;
 
-        historicoSaques.append(
-                String.format(
-                        "Saque: R$ %d,00 | Saldo restante: R$ %,.2f\n",
-                        valor,
-                        (double) calcularSomaTotal()
+        historicoSaques.append(String.format("Saque: R$ %d,00 | Saldo restante: R$ %,.2f\n",
+                        valor,(double) calcularSomaTotal()
                 )
         );
 
@@ -204,11 +184,9 @@ public class CaixaEletronico implements ICaixaEletronico {
         return gerarMensagemSaque(notasParaEntregar, valor);
     }
 
-
  
     // VALIDA SAQUE
   
-
     private String validarSaque(Integer valor) {
 
         if (valor == null) {
@@ -220,7 +198,7 @@ public class CaixaEletronico implements ICaixaEletronico {
         }
 
         if (valor == 1 || valor == 3) {
-            return "Erro: Saque Inválido, Somente valor de Nota";
+            return "Erro: Saque Inválido, Somente valor de Notas" + " " + "Disponiveis 2,5,10,20,50,100\"";
         }
 
         int valorDisponivel = calcularSomaTotal();
@@ -237,10 +215,8 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-  
     // CALCULA QUANTIDADE DE NOTAS
   
-
     private int calcularQtdNotas(int indice, int valorRestante, int valorNota) {
 
         int qtdDisponivel = estoqueCedulas[indice][1];
@@ -253,8 +229,7 @@ public class CaixaEletronico implements ICaixaEletronico {
 
             int resto = valorRestante - (qtdNotas * valorNota);
 
-            if ((resto == 1 || resto == 3) && qtdNotas > 0) {
-                qtdNotas--;
+            if ((resto == 1 || resto == 3) && qtdNotas > 0) { qtdNotas--;
             }
         }
 
@@ -272,20 +247,17 @@ public class CaixaEletronico implements ICaixaEletronico {
             }
         }
 
-
         // Verifica estoque
-        if (qtdNotas > qtdDisponivel) {
-            qtdNotas = qtdDisponivel;
+        if (qtdNotas > qtdDisponivel) {qtdNotas = qtdDisponivel;
+        
         }
 
         return qtdNotas;
     }
 
-
    
     // ATUALIZA ESTOQUE
    
-
     private void atualizarEstoque(int[] notasParaEntregar) {
 
         for (int i = 0; i < estoqueCedulas.length; i++) {
@@ -295,15 +267,13 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-  
     // GERA COMPROVANTE
    
-
     private String gerarMensagemSaque(int[] notasParaEntregar, int valor) {
 
         StringBuilder mensagem = new StringBuilder();
 
-        mensagem.append("SAQUE REALIZADO COM SUCESSO\n\n");
+        mensagem.append("Saque Realizado com Sucesso\n\n");
 
         mensagem.append(String.format("Valor sacado: R$ %d,00\n\n", valor));
 
@@ -311,39 +281,30 @@ public class CaixaEletronico implements ICaixaEletronico {
 
             if (notasParaEntregar[i] > 0) {
 
-                mensagem.append(
-                        String.format(
-                                "%d nota(s) para R$ %d\n",
+                mensagem.append(String.format("%d nota(s) para R$ %d\n",
                                 notasParaEntregar[i],
-                                estoqueCedulas[i][0]
-                        )
-                );
+                                estoqueCedulas[i][0]));
             }
         }
-
 
         return mensagem.toString();
     }
 
 
-   
     // TOTAL SACADO
     
-
     public double getTotalSacado() {
         return totalSacadoNaSessao;
     }
 
 
-   
     // EXTRATO
  
-
     public String extrato() {
 
         StringBuilder relatorio = new StringBuilder();
 
-        relatorio.append("--- EXTRATO DE SAQUES ---\n\n");
+        relatorio.append("--- Extrato de Saques ---\n\n");
 
         if (historicoSaques.length() == 0) {
 
@@ -356,16 +317,12 @@ public class CaixaEletronico implements ICaixaEletronico {
 
         relatorio.append("\n--------------------------------\n");
 
-        relatorio.append(
-                String.format(
-                        "SALDO ATUAL DO CAIXA: R$ %,.2f",
-                        (double) calcularSomaTotal()
-                )
+        relatorio.append(String.format("Saldo Atual do Caixa: R$ %,.2f",
+                        (double) calcularSomaTotal())
         );
 
         return relatorio.toString();
     }
-
 
     
     // COTA MÍNIMA
@@ -381,36 +338,26 @@ public class CaixaEletronico implements ICaixaEletronico {
 
         if (novoMinimo > valorTotalNoCaixa) {
 
-            return String.format(
-                    "Caixa Vazio: Chame o Operador",
-                    novoMinimo,
-                    valorTotalNoCaixa
-            );
+            return String.format("Caixa Vazio: Chame o Operador", novoMinimo, valorTotalNoCaixa);
         }
 
         this.cotaMinima = novoMinimo;
 
-        return String.format(
-                "Cota mínima atualizada para R$ %d,00",
-                novoMinimo
-        );
+        return String.format("Cota mínima atualizada para R$ %d,00", novoMinimo);
     }
-
 
     public static void main(String[] args) {
 
         EventQueue.invokeLater(() -> {
 
-            try {
-
-                Gul frame = new Gul();
+            try {Gul frame = new Gul();
 
                 frame.setVisible(true);
 
-            } catch (Exception e) {
-
-                e.printStackTrace();
+            } catch (Exception e) {e.printStackTrace();
+            
             }
         });
     }
 }
+
