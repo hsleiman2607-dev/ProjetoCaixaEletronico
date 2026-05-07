@@ -22,11 +22,11 @@ public class CaixaEletronico implements ICaixaEletronico {
         this.estoqueCedulas = new int[][] {
         	
                 {100, 100},
-                {50, 200},
-                {20, 300},
-                {10, 350},
-                {5, 450},
-                {2, 500}
+                {50,  200},
+                {20,  300},
+                {10,  350},
+                {5,   450},
+                {2,   500}
         };
     }
 
@@ -226,7 +226,7 @@ public class CaixaEletronico implements ICaixaEletronico {
         int valorDisponivel = calcularSomaTotal();
 
         if ((valorDisponivel - valor) < cotaMinima) {
-            return "Caixa indisponível: saldo maior que a cota mínima.";
+            return "Saque não realizado por falta de cédulas";
         }
 
         if (valor > valorDisponivel) {
@@ -386,7 +386,7 @@ public class CaixaEletronico implements ICaixaEletronico {
         if (novoMinimo > valorTotalNoCaixa) {
 
             return String.format(
-                    "Erro: a cota mínima (R$ %d) não pode ser maior que o saldo atual do caixa (R$ %d).",
+                    "Caixa Vazio: Chame o Operador",
                     novoMinimo,
                     valorTotalNoCaixa
             );
