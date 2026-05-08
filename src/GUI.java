@@ -127,9 +127,8 @@ public class GUI extends JFrame {
 
         contentPane.add(btnValorTotal);
 
-        // ==========================
+
         // REPOSIÇÃO
-        // ==========================
 
         JButton btnReposicao = new JButton("Reposição de Cédulas");
 
