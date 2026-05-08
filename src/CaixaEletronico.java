@@ -1,7 +1,7 @@
 // colocar a execução da interface gráfica na fila de eventos do sistema
 import java.awt.EventQueue;
 
-// implementa uma interface chamada
+
 // define as "regras" ou métodos obrigatórios que este caixa deve ter
 public class CaixaEletronico implements ICaixaEletronico {
 
@@ -20,10 +20,10 @@ public class CaixaEletronico implements ICaixaEletronico {
 
     public CaixaEletronico() {
 
-        // Inicialização do estoque
+// Inicialização do estoque
         this.estoqueCedulas = new int[][] {
         	
-        	// os valores padrão Inicial
+// os valores padrão Inicial
                 {100, 100},
                 {50,  200},
                 {20,  300},
@@ -41,30 +41,32 @@ public class CaixaEletronico implements ICaixaEletronico {
         relatorio.append("---- Relatório de Cédulas ----\n\n");
 
         
-// Faz um laço (loop) passando por cada linha (par) do estoque e formata uma string dizendo "Nota R$ X - Quantidade: Y"
+// Faz um laço (loop) passando por cada linha (par) 
+// do estoque e formata uma string dizendo "Nota R$ X - Quantidade: Y"
         for (int[] par : estoqueCedulas) {
             relatorio.append(String.format("Nota R$ %d - Quantidade: %d\n",
                     par[0],
                     par[1]
             ));
         }
-
+ 
+        
+// Adiciona ao final do relatório o valor total que já foi sacado 
+// e o saldo restante (chamando a função calcularSomaTotal()). Retorna esse texto
         relatorio.append("\n------------------------------------------\n");
 
         relatorio.append(String.format("Total Sacado na Sessão: R$ %,.2f\n",
-                totalSacadoNaSessao
-        ));
+                totalSacadoNaSessao));
 
         relatorio.append(String.format("Saldo Total em Caixa: R$ %,.2f\n",
-                (double) calcularSomaTotal()
-        ));
+                (double) calcularSomaTotal()));
 
         relatorio.append("------------------------------------------\n");
 
         return relatorio.toString();
     }
    
-    // VALOR TOTAL DISPONÍVEL
+// VALOR TOTAL DISPONÍVEL
 
     public String pegaValorTotalDisponivel() {
 
@@ -76,7 +78,7 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-    // REPOSIÇÃO DE CÉDULAS
+// REPOSIÇÃO DE CÉDULAS
    
     public String reposicaoCedulas(Integer cedula, Integer quantidade) {
 
@@ -99,7 +101,7 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-    // VERIFICA EXISTÊNCIA DA CÉDULA 
+// VERIFICA EXISTÊNCIA DA CÉDULA 
 
     public boolean existeCedula(int cedula) {
 
@@ -114,8 +116,12 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-    // CALCULA SOMA TOTAL DO CAIXA
+/* ... CALCULA SOMA TOTAL DO CAIXA ...
 
+A função secreta (privada) calcularSomaTotal multiplica o valor da nota (coluna 0) 
+pela quantidade disponível (coluna 1) e soma tudo para descobrir quanto dinheiro há no cofre. 
+O pegaValorTotalDisponivel apenas chama essa função e a formata com "R$"*/
+    
     private int calcularSomaTotal() {
 
         int soma = 0;
@@ -127,65 +133,70 @@ public class CaixaEletronico implements ICaixaEletronico {
         return soma;
     }
 
-
-    // SAQUE
+// SAQUE
 
     public String sacar(Integer valor) {
 
-        // Validações iniciais
+// Validações iniciais
         String validacao = validarSaque(valor);
 
         if (validacao != null) {
             return validacao;
         }
 
+// valorRestante: Guarda o valor que ainda falta dispensar no algoritmo.
         int valorRestante = valor;
-
+// notasParaEntregar: Um array vazio que vai anotar quantas notas de cada tipo serão entregues nesta operação.
         int[] notasParaEntregar = new int[estoqueCedulas.length];
-
+// totalDeNotas: Contador para impedir que o caixa libere um maço físico muito grande de notas.
         int totalDeNotas = 0;
 
-        // Calcula notas
+// Calcula notas
+// O coração do algoritmo (Abordagem Gulosa): Passa pelas notas da maior (100) para a menor (2).
         for (int i = 0; i < estoqueCedulas.length; i++) {
 
             int valorNota = estoqueCedulas[i][0];
-
+// Chama calcularQtdNotas para saber quantas daquela nota específica pode usar.
             int qtdNotas = calcularQtdNotas(i, valorRestante, valorNota);
 
+// Registra essa quantidade no array notasParaEntregar.
             notasParaEntregar[i] = qtdNotas;
-
+// Subtrai o valor dessas notas do valorRestante.
             valorRestante -= qtdNotas * valorNota;
-
+// Soma a quantidade de cédulas no totalDeNotas.
             totalDeNotas += qtdNotas;
         }
 
-        // Limite físico do caixa
+// Limite físico do caixa
+// Trava física: A boca do caixa só cospe 30 cédulas por vez.
         if (totalDeNotas > 30) {
             return "Erro: limite máximo de 30 notas excedido.";
         }
 
-        // Não conseguiu montar o valor exato
+// Não conseguiu montar o valor exato
         if (valorRestante != 0) {
             return "Erro: o caixa não possui notas suficientes para compor este valor.";
         }
 
-        // Atualiza estoque
+// Atualiza estoque
         atualizarEstoque(notasParaEntregar);
 
-        // Atualiza histórico
+// Atualiza histórico
+        
+// Se deu tudo certo, deduz as notas do estoque, soma o valor sacado na sessão,
+// anota no bloco de histórico e chama a função para imprimir o recibo.
         totalSacadoNaSessao += valor;
-
         historicoSaques.append(String.format("Saque: R$ %d,00 | Saldo restante: R$ %,.2f\n",
                         valor,(double) calcularSomaTotal()
                 )
         );
 
-        // Gera comprovante
+// Gera comprovante
         return gerarMensagemSaque(notasParaEntregar, valor);
     }
 
  
-    // VALIDA SAQUE
+// VALIDA SAQUE
   
     private String validarSaque(Integer valor) {
 
@@ -203,7 +214,7 @@ public class CaixaEletronico implements ICaixaEletronico {
 
         int valorDisponivel = calcularSomaTotal();
 
-        if ((valorDisponivel - valor) < cotaMinima) {
+        if ((valorDisponivel) < cotaMinima) {
             return "Saque não realizado por falta de cédulas";
         }
 
@@ -215,7 +226,7 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-    // CALCULA QUANTIDADE DE NOTAS
+// CALCULA QUANTIDADE DE NOTAS
   
     private int calcularQtdNotas(int indice, int valorRestante, int valorNota) {
 
@@ -224,7 +235,7 @@ public class CaixaEletronico implements ICaixaEletronico {
         int qtdNotas = valorRestante / valorNota;
 
 
-        // Evita restos impossíveis
+// Evita restos impossíveis
         if (valorNota > 5) {
 
             int resto = valorRestante - (qtdNotas * valorNota);
@@ -234,12 +245,12 @@ public class CaixaEletronico implements ICaixaEletronico {
         }
 
 
-        // Regra da nota de 5
+// Regra da nota de 5
         if (valorNota == 5) {
 
             qtdNotas = valorRestante / 5;
 
-            // Se a sobra virar ímpar impossível para nota 2
+// Se a sobra virar ímpar impossível para nota 2
             while (qtdNotas > 0 &&
                   ((valorRestante - (qtdNotas * 5)) % 2 != 0)) {
 
@@ -247,7 +258,7 @@ public class CaixaEletronico implements ICaixaEletronico {
             }
         }
 
-        // Verifica estoque
+// Verifica estoque
         if (qtdNotas > qtdDisponivel) {qtdNotas = qtdDisponivel;
         
         }
@@ -256,7 +267,7 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
    
-    // ATUALIZA ESTOQUE
+// ATUALIZA ESTOQUE
    
     private void atualizarEstoque(int[] notasParaEntregar) {
 
@@ -267,7 +278,7 @@ public class CaixaEletronico implements ICaixaEletronico {
     }
 
 
-    // GERA COMPROVANTE
+// GERA COMPROVANTE
    
     private String gerarMensagemSaque(int[] notasParaEntregar, int valor) {
 
@@ -290,15 +301,14 @@ public class CaixaEletronico implements ICaixaEletronico {
         return mensagem.toString();
     }
 
-
-    // TOTAL SACADO
+// TOTAL SACADO
     
     public double getTotalSacado() {
         return totalSacadoNaSessao;
     }
 
 
-    // EXTRATO
+// EXTRATO
  
     public String extrato() {
 
@@ -318,15 +328,13 @@ public class CaixaEletronico implements ICaixaEletronico {
         relatorio.append("\n--------------------------------\n");
 
         relatorio.append(String.format("Saldo Atual do Caixa: R$ %,.2f",
-                        (double) calcularSomaTotal())
-        );
+                        (double) calcularSomaTotal()));
 
         return relatorio.toString();
     }
 
     
-    // COTA MÍNIMA
-    
+// COTA MÍNIMA
 
     public String armazenaCotaMinima(Integer novoMinimo) {
 
@@ -349,11 +357,8 @@ public class CaixaEletronico implements ICaixaEletronico {
     public static void main(String[] args) {
 
         EventQueue.invokeLater(() -> {
-
-            try {Gul frame = new Gul();
-
+            try {GUI frame = new GUI();
                 frame.setVisible(true);
-
             } catch (Exception e) {e.printStackTrace();
             
             }
