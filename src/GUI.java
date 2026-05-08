@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-public class Gul extends JFrame {
+public class GUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class Gul extends JFrame {
 
         EventQueue.invokeLater(() -> {
 
-            try { Gul frame = new Gul();
+            try { GUI frame = new GUI();
             
             frame.setVisible(true);
 
@@ -36,7 +36,7 @@ public class Gul extends JFrame {
     }
 
     // CONSTRUTOR
-    public Gul() {
+    public GUI() {
 
         setTitle("Caixa Eletrônico");
 
